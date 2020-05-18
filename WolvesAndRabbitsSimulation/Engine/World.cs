@@ -16,6 +16,9 @@ namespace WolvesAndRabbitsSimulation.Engine
         private Size size = new Size(width, height);
         private GameObject[] objects = new GameObject[0];
 
+        private List<GameObject>[,] spatialObjects = new List<GameObject>[(width/2)+1,(height/2)+1];
+        private int cellSize = 2;
+
         public IEnumerable<GameObject> GameObjects
         {
             get
@@ -45,11 +48,26 @@ namespace WolvesAndRabbitsSimulation.Engine
         public void Add(GameObject obj)
         {
             objects = objects.Concat(new GameObject[] { obj }).ToArray();
+            GetBucketAt(obj.Position).Add(obj);
         }
 
         public void Remove(GameObject obj)
         {
             objects = objects.Where(o => o != obj).ToArray();
+            GetBucketAt(obj.Position).Remove(obj);
+        }
+
+        public List<GameObject> GetBucketAt(Point pos)
+        {
+            int convertedPosX = (int)(pos.X / cellSize);
+            int ConvertedPosY = (int)(pos.Y / cellSize);
+            var bucket = spatialObjects[convertedPosX ,ConvertedPosY];
+            if (bucket == null)
+            {
+                bucket = new List<GameObject>();
+                spatialObjects[convertedPosX, ConvertedPosY]=bucket;
+            }
+            return bucket;
         }
 
         public virtual void Update()
@@ -89,14 +107,15 @@ namespace WolvesAndRabbitsSimulation.Engine
 
         public IEnumerable<GameObject> ObjectsAt(Point pos)
         {
-            return GameObjects.Where(each =>
-            {
-                Rectangle bounds = each.Bounds;
-                PointF center = new PointF((bounds.Left + bounds.Right - 1) / 2.0f,
-                                           (bounds.Top + bounds.Bottom - 1) / 2.0f);
-                return Dist(pos, center) <= bounds.Width / 2.0f
-                    && Dist(pos, center) <= bounds.Height / 2.0f;
-            });
+            return GetBucketAt(pos);
+            //return GameObjects.Where(each =>
+            //{
+            //    Rectangle bounds = each.Bounds;
+            //    PointF center = new PointF((bounds.Left + bounds.Right - 1) / 2.0f,
+            //                               (bounds.Top + bounds.Bottom - 1) / 2.0f);
+            //    return Dist(pos, center) <= bounds.Width / 2.0f
+            //        && Dist(pos, center) <= bounds.Height / 2.0f;
+            //});
         }
     }
 }
