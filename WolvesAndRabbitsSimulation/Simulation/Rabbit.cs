@@ -37,6 +37,8 @@ namespace WolvesAndRabbitsSimulation.Simulation
 
         private void EatSomeGrass(World forest)
         {
+            //IEnumerable<Grass> grass = forest.ObjectsAt(Position).Cast<Grass>();
+
             Grass grass = forest.ObjectsAt(Position).Select(o => o as Grass).First(o => o != null);
             int amount = FOOD_CONSUMPTION * 2;
             if (grass.Growth < amount)
@@ -50,7 +52,7 @@ namespace WolvesAndRabbitsSimulation.Simulation
         private void Breed(World forest)
         {
             if (age < ADULTHOOD || food < FOOD_TO_BREED) return;
-            if (forest.ObjectsAt(Position).Any(o => o is Rabbit && o != this))
+            if (forest.ObjectsCloseTo(Position).Any(o => o is Rabbit && o != this))
             {
                 for (int i = 0; i < MAX_CHILDREN; i++)
                 {

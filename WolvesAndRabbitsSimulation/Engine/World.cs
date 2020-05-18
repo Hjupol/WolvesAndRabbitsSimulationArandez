@@ -70,12 +70,40 @@ namespace WolvesAndRabbitsSimulation.Engine
             return bucket;
         }
 
+        public List<GameObject> GetBucketAt(int x,int y)
+        {
+            if (x > 0 && y > 0 && x < 256 && y < 256)
+            {
+                int convertedPosX = (int)(x / cellSize);
+                int ConvertedPosY = (int)(y / cellSize);
+                var bucket = spatialObjects[convertedPosX, ConvertedPosY];
+                if (bucket == null)
+                {
+                    bucket = new List<GameObject>();
+                    spatialObjects[convertedPosX, ConvertedPosY] = bucket;
+                }
+                return bucket;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
         public virtual void Update()
         {
             foreach (GameObject obj in GameObjects)
             {
+                var oldPosition = obj.Position;
+
                 obj.UpdateOn(this);
                 obj.Position = PositiveMod(obj.Position, size);
+
+                if (oldPosition != obj.Position)
+                {
+                    GetBucketAt(oldPosition).Remove(obj);
+                    GetBucketAt(obj.Position).Add(obj);
+                }
             }
         }
 
@@ -117,5 +145,37 @@ namespace WolvesAndRabbitsSimulation.Engine
             //        && Dist(pos, center) <= bounds.Height / 2.0f;
             //});
         }
+
+        public List<GameObject> ObjectsCloseTo(Point pos)
+        {
+            List<GameObject> objectsClose = new List<GameObject>();
+            for(int x = -1; x < 2; x++)
+            {
+                for(int y = -1; y < 2; y++)
+                {
+                    objectsClose.AddRange(CloseObj(pos, GetBucketAt(pos.X + x, pos.Y + y)));
+                }
+            }
+            return objectsClose;
+
+        }
+        
+        public List<GameObject> CloseObj(Point position,List<GameObject> bucketObjects)
+        {
+            List<GameObject> objectsCloseList = new List<GameObject>();
+            if (bucketObjects != null)
+            {
+                foreach (GameObject g in bucketObjects)
+                {
+                    if (Dist(position, g.Position) <= g.Bounds.Width / 2.0f
+                        && Dist(position, g.Position) <= g.Bounds.Height / 2.0f)
+                    {
+                        objectsCloseList.Add(g);
+                    }
+                }
+            }
+            return objectsCloseList;
+        }
+           
     }
 }
