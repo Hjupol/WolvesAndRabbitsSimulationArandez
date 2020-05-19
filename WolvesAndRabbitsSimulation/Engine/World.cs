@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace WolvesAndRabbitsSimulation.Engine
 {
@@ -14,7 +12,8 @@ namespace WolvesAndRabbitsSimulation.Engine
         private const int width = 255;
         private const int height = 255;
         private Size size = new Size(width, height);
-        private GameObject[] objects = new GameObject[0];
+        //private GameObject[] objects = new GameObject[0];
+        private HashSet<GameObject> objects = new HashSet<GameObject>();
 
         private List<GameObject>[,] spatialObjects = new List<GameObject>[(width/2)+1,(height/2)+1];
         private int cellSize = 2;
@@ -47,13 +46,16 @@ namespace WolvesAndRabbitsSimulation.Engine
 
         public void Add(GameObject obj)
         {
-            objects = objects.Concat(new GameObject[] { obj }).ToArray();
+            //objects = objects.Concat(new GameObject[] { obj }).ToArray();
+            objects.Add(obj);
+            
             GetBucketAt(obj.Position).Add(obj);
         }
 
         public void Remove(GameObject obj)
         {
-            objects = objects.Where(o => o != obj).ToArray();
+            //objects = objects.Where(o => o != obj).ToArray();
+            objects.Remove(obj);
             GetBucketAt(obj.Position).Remove(obj);
         }
 
