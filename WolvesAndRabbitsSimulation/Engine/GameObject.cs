@@ -13,13 +13,13 @@ namespace WolvesAndRabbitsSimulation.Engine
         private double rotation = 0;
         private Color color = Color.Black;
 
-        private int index;
+        //private int index;
 
-        public int Index
-        {
-            get { return index; }
-            set { index = value; }
-        }
+        //public int Index
+        //{
+        //    get { return index; }
+        //    set { index = value; }
+        //}
 
         public Point Position
         {
