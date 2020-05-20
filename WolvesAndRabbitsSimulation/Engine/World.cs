@@ -13,10 +13,11 @@ namespace WolvesAndRabbitsSimulation.Engine
         private const int height = 255;
         private Size size = new Size(width, height);
         //private GameObject[] objects = new GameObject[0];
-        private HashSet<GameObject> objects = new HashSet<GameObject>();
 
+        private HashSet<GameObject> objects = new HashSet<GameObject>();
         private List<GameObject>[,] spatialObjects = new List<GameObject>[(width/2)+1,(height/2)+1];
         private int cellSize = 2;
+        private Pen pen = new Pen(Color.White);
 
         public IEnumerable<GameObject> GameObjects
         {
@@ -113,7 +114,8 @@ namespace WolvesAndRabbitsSimulation.Engine
         {
             foreach (GameObject obj in GameObjects)
             {
-                graphics.FillRectangle(new Pen(obj.Color).Brush, obj.Bounds);
+                pen.Color = obj.Color;
+                graphics.FillRectangle(pen.Brush, obj.Bounds);
             }
         }
 
