@@ -53,6 +53,7 @@ namespace WolvesAndRabbitsSimulation
         {
             FillWithGrass();
             SpawnSomeRabbits();
+            SpawnSomeWolves();
         }
 
         private void Form1_Paint(object sender, PaintEventArgs e)
@@ -95,6 +96,7 @@ namespace WolvesAndRabbitsSimulation
             if (world.GameObjects.Where(o => o is Rabbit).Count() == 0)
             {
                 SpawnSomeRabbits();
+                SpawnSomeWolves();
             }
         }
 
@@ -128,6 +130,25 @@ namespace WolvesAndRabbitsSimulation
                     rabbit.Position = new Point(rabbit.Position.X, 0);
                 }
                 world.Add(rabbit);
+            }
+        }
+
+        private void SpawnSomeWolves()
+        {
+            for (int i = 0; i < 50; i++)
+            {
+                Wolf wolf = new Wolf();
+                wolf.Rotation = world.Random() * Math.PI * 2;
+                wolf.Position = world.RandomPoint();
+                if (world.Random(1, 10) < 5)
+                {
+                    wolf.Position = new Point(0, wolf.Position.Y);
+                }
+                else
+                {
+                    wolf.Position = new Point(wolf.Position.X, 0);
+                }
+                world.Add(wolf);
             }
         }
 
