@@ -33,6 +33,7 @@ namespace WolvesAndRabbitsSimulation
             stopwatch.Start();
             ChooseFileName();
             InitializeWorld();
+            this.DoubleBuffered = true;
             SetStyle(ControlStyles.OptimizedDoubleBuffer
                 | ControlStyles.UserPaint
                 | ControlStyles.AllPaintingInWmPaint,
